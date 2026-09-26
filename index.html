@@ -43,10 +43,24 @@
     .pedal.accel { background:var(--accent); color:var(--accent-ink); border-color:rgba(73,51,0,.22); }
     .pedal.brake { background:var(--danger); color:white; border-color:rgba(90,0,0,.25); }
     .pedal span { font-family:'Barlow Condensed',sans-serif; font-size:13px; font-weight:800; letter-spacing:.06em; }
-    .horn { position:absolute; right:14px; bottom:calc(110px + env(safe-area-inset-bottom)); width:48px; height:48px; pointer-events:auto; }
+    .drive-tools { position:absolute; z-index:3; right:14px; bottom:calc(110px + env(safe-area-inset-bottom)); display:flex; align-items:flex-end; gap:8px; pointer-events:auto; }
+    .tool-button { width:48px; height:48px; border:1px solid var(--line); border-radius:14px; background:var(--panel); box-shadow:var(--shadow); backdrop-filter:blur(10px); display:grid; place-items:center; cursor:pointer; font-family:'Barlow Condensed',sans-serif; font-size:11px; font-weight:800; }
+    .tool-button:active,.tool-button.on { background:var(--accent); color:var(--accent-ink); transform:translateY(2px); }
+    .tool-button svg { width:24px; height:24px; fill:none; stroke:currentColor; stroke-width:2.2; stroke-linecap:round; stroke-linejoin:round; }
+    .horn-bank { display:flex; gap:5px; padding:5px; border-radius:14px; background:rgba(20,30,27,.3); }
+    .horn { width:43px; height:43px; border-radius:11px; }
+    .horn strong { font-family:'Barlow Condensed',sans-serif; font-size:18px; line-height:1; }
+    .arrow-steer { display:flex; gap:10px; }
+    .steering-wheel { position:relative; width:112px; height:112px; border:10px solid rgba(239,245,239,.92); border-radius:50%; background:rgba(14,24,21,.25); box-shadow:0 8px 24px rgba(0,0,0,.28),inset 0 0 0 3px rgba(18,35,29,.5); cursor:grab; touch-action:none; transition:transform .1s ease-out; }
+    .steering-wheel:active { cursor:grabbing; }
+    .steering-wheel::before,.steering-wheel::after { content:""; position:absolute; left:50%; top:50%; width:45px; height:8px; border-radius:5px; background:#dce5dc; transform-origin:0 50%; }
+    .steering-wheel::before { transform:translateY(-50%) rotate(25deg); }
+    .steering-wheel::after { transform:translateY(-50%) rotate(155deg); }
+    .wheel-hub { position:absolute; z-index:1; left:50%; top:50%; width:34px; height:34px; transform:translate(-50%,-50%); border:5px solid #dce5dc; border-radius:50%; background:#27342f; }
+    .controls:not(.wheel-mode) .steering-wheel { display:none; }
+    .controls.wheel-mode .arrow-steer { display:none; }
     .gear-controls { position:absolute; z-index:3; right:76px; bottom:calc(116px + env(safe-area-inset-bottom)); display:flex; align-items:center; border-radius:9px; overflow:hidden; box-shadow:var(--shadow); }.gear-controls[hidden]{display:none}.gear-controls button,.gear-controls strong{width:38px;height:38px;border:0;display:grid;place-items:center;background:var(--panel);font-weight:900}.gear-controls button{cursor:pointer}.gear-controls strong{background:var(--accent);color:var(--accent-ink)}
-    .controls.wheel-mode .control-cluster:first-child { width:136px; height:68px; padding:4px; justify-content:space-between; border:3px solid rgba(238,245,235,.62); border-radius:50%; background:rgba(20,30,27,.35); }
-    .controls.wheel-mode .control-cluster:first-child .control { width:50px; height:56px; box-shadow:none; background:transparent; border:0; }
+    .controls.wheel-mode .control-cluster:first-child { align-items:flex-end; }
     .menu-button { pointer-events:auto; min-height:42px; padding:0 14px; border:1px solid var(--line); border-radius:10px; background:var(--panel); box-shadow:var(--shadow); backdrop-filter:blur(10px); font-family:'Barlow Condensed',sans-serif; font-size:14px; font-weight:800; letter-spacing:.06em; cursor:pointer; }
     .menu-button:active { background:var(--button-pressed); transform:translateY(2px); }
     .overlay { position:absolute; inset:0; z-index:5; display:grid; place-items:center; padding:22px; background:linear-gradient(110deg,rgba(10,25,22,.44),rgba(10,25,22,.74)); }
@@ -85,7 +99,7 @@
     .choice { min-width:112px; min-height:38px; border:1px solid var(--line); border-radius:9px; background:var(--button); font-weight:800; cursor:pointer; }
     .choice:active { background:var(--button-pressed); }
     /* BUSSID-inspired shell */
-    body.menu-open .hud,body.menu-open .controls,body.menu-open .horn,body.menu-open .gear-controls { display:none!important; }
+    body.menu-open .hud,body.menu-open .controls,body.menu-open .drive-tools,body.menu-open .gear-controls { display:none!important; }
     .bussid-menu { display:block; padding:0; background:linear-gradient(90deg,rgba(6,10,12,.55),rgba(6,10,12,.04) 58%,rgba(6,10,12,.2)); color:#f5f7f5; }
     .bussid-menu[hidden] { display:none; }
     .top-bar { position:absolute; z-index:2; left:0; right:0; top:0; min-height:64px; padding:9px 18px 9px 24px; display:flex; align-items:center; gap:12px; background:rgba(18,22,24,.9); border-bottom:2px solid #df7900; box-shadow:0 8px 22px rgba(0,0,0,.35); }
@@ -136,7 +150,10 @@
       .controls { padding:0 10px; bottom:calc(10px + env(safe-area-inset-bottom)); }
       .control { width:58px; height:58px; }
       .pedal { width:61px; height:76px; border-radius:16px; }
-      .horn { right:10px; bottom:calc(98px + env(safe-area-inset-bottom)); }
+      .drive-tools { right:10px; bottom:calc(94px + env(safe-area-inset-bottom)); gap:5px; }
+      .tool-button { width:42px; height:42px; border-radius:11px; }
+      .horn-bank { gap:3px; padding:4px; }.horn { width:36px; height:36px; }.horn strong { font-size:16px; }
+      .steering-wheel { width:96px; height:96px; border-width:9px; }
       .top-bar { min-height:54px; padding:7px 9px; gap:6px; }.profile-dot { width:9px; height:9px; }.top-bar strong { min-width:0; padding:7px 9px; font-size:11px; }.balance { padding:7px 9px; font-size:11px; }.top-actions { gap:4px; }.top-actions button { width:34px; height:34px; font-size:14px; }
       .side-panel { left:8px; top:65px; bottom:76px; width:154px; padding:7px; gap:6px; }.menu-section { padding:6px; }.menu-section h2 { font-size:16px; margin-bottom:5px; }.mode,.manage { min-height:34px; margin:3px 0; font-size:11px; }.contact span { width:30px; height:29px; font-size:15px; margin:1px; }
       .bus-health { bottom:12px; min-width:184px; padding:7px 16px; font-size:11px; }.menu-hint { display:none; }
@@ -146,7 +163,11 @@
       .stat { padding:6px 9px; } .stat strong { font-size:19px; }
       .route { display:none; } .message { top:66px; }
       .control { width:52px; height:52px; } .pedal { height:58px; width:64px; }
-      .horn { right:92px; bottom:18px; }
+      .drive-tools { right:88px; bottom:16px; }
+      .horn-bank { gap:2px; padding:3px; }
+      .horn { width:32px; height:32px; border-radius:8px; }
+      .horn strong { font-size:14px; }
+      .steering-wheel { width:84px; height:84px; border-width:8px; }
       .card { padding:18px 22px; } .card h1 { font-size:38px; } .instructions { margin:12px 0; }
     }
     @media (prefers-reduced-motion:reduce) { .message { transition:none; } }
@@ -168,17 +189,28 @@
   </div>
   <div class="message" id="message"></div>
 
-  <div class="controls" aria-label="Driving controls">
+  <div class="controls wheel-mode" aria-label="Driving controls">
     <div class="control-cluster">
-      <button class="control" id="left" aria-label="Steer left"><svg viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6"/></svg></button>
-      <button class="control" id="right" aria-label="Steer right"><svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+      <div class="arrow-steer">
+        <button class="control" id="left" aria-label="Steer left"><svg viewBox="0 0 24 24"><path d="M19 12H5m6-6-6 6 6 6"/></svg></button>
+        <button class="control" id="right" aria-label="Steer right"><svg viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button>
+      </div>
+      <div class="steering-wheel" id="steeringWheel" role="slider" tabindex="0" aria-label="Steering wheel" aria-valuemin="-100" aria-valuemax="100" aria-valuenow="0"><span class="wheel-hub"></span></div>
     </div>
     <div class="control-cluster">
       <button class="control pedal brake" id="brake" aria-label="Brake"><span>BRAKE</span></button>
       <button class="control pedal accel" id="accel" aria-label="Accelerate"><span>GAS</span></button>
     </div>
   </div>
-  <button class="control horn" id="horn" aria-label="Sound horn"><svg viewBox="0 0 24 24"><path d="M5 10v4h4l5 4V6L9 10H5Z"/><path d="M17 9c1.3 1.6 1.3 4.4 0 6"/></svg></button>
+  <div class="drive-tools" aria-label="Bus tools">
+    <button class="tool-button" id="cameraButton" type="button" aria-label="Change camera angle"><svg viewBox="0 0 24 24"><path d="M4 7h3l2-2h6l2 2h3v11H4Z"/><circle cx="12" cy="12.5" r="3.5"/></svg><span id="cameraLabel">CAM 1</span></button>
+    <button class="tool-button on" id="lightButton" type="button" aria-label="Toggle bus lights"><svg viewBox="0 0 24 24"><path d="M14 5a7 7 0 0 0 0 14V5Z"/><path d="m18 7 3-2m-3 7h4m-4 5 3 2"/></svg></button>
+    <div class="horn-bank" aria-label="Three horn sounds">
+      <button class="tool-button horn" data-horn="1" type="button" aria-label="City horn"><strong>H1</strong></button>
+      <button class="tool-button horn" data-horn="2" type="button" aria-label="Coach horn"><strong>H2</strong></button>
+      <button class="tool-button horn" data-horn="3" type="button" aria-label="Air horn"><strong>H3</strong></button>
+    </div>
+  </div>
   <div class="gear-controls" id="gearControls" hidden><button type="button" id="gearDown" aria-label="Shift down">−</button><strong id="gearValue">1</strong><button type="button" id="gearUp" aria-label="Shift up">+</button></div>
 
   <section class="overlay bussid-menu" id="overlay" aria-label="Game menu">
@@ -237,7 +269,7 @@
   <section class="modal" id="garageModal" hidden aria-label="Garage">
     <div class="settings-window garage-window"><header><h2>Garage</h2><button class="close-modal" type="button" data-close="garageModal" aria-label="Close garage">×</button></header>
       <div class="garage-body"><p>Choose a bus and make it yours.</p><div class="bus-list">
-        <button class="bus-card selected" data-bus="0"><b>Island Express</b><small>Balanced city coach</small></button><button class="bus-card" data-bus="1"><b>Coastal Star</b><small>Long touring coach</small></button><button class="bus-card" data-bus="2"><b>Metro Mini</b><small>Quick compact shuttle</small></button>
+        <button class="bus-card selected" data-bus="0"><b>Island Executive AC</b><small>Luxury intercity coach</small></button><button class="bus-card" data-bus="1"><b>Coastal Grand AC</b><small>High-deck touring coach</small></button><button class="bus-card" data-bus="2"><b>Royal Pearl AC</b><small>Premium express coach</small></button>
       </div><div class="paint-row" aria-label="Bus paint colors"><button class="paint" style="--paint:#e9a91f" data-color="e9a91f" aria-label="Golden yellow" aria-pressed="true"></button><button class="paint" style="--paint:#d84d3c" data-color="d84d3c" aria-label="Island red" aria-pressed="false"></button><button class="paint" style="--paint:#287d75" data-color="287d75" aria-label="Lagoon green" aria-pressed="false"></button><button class="paint" style="--paint:#3d6d9e" data-color="3d6d9e" aria-label="Ocean blue" aria-pressed="false"></button><button class="paint" style="--paint:#e7e1d2" data-color="e7e1d2" aria-label="Pearl white" aria-pressed="false"></button></div><button class="garage-play" id="garagePlay" type="button">DRIVE SELECTED BUS</button></div>
     </div>
   </section>
@@ -250,11 +282,11 @@ var canvas=document.getElementById('road'), speedEl=document.getElementById('spe
 var stopNameEl=document.getElementById('stopName'), stopDistEl=document.getElementById('stopDist'), message=document.getElementById('message');
 var overlay=document.getElementById('overlay'), settingsModal=document.getElementById('settingsModal'), garageModal=document.getElementById('garageModal');
 var menuButton=document.getElementById('menuButton'), garagePlay=document.getElementById('garagePlay');
-var input={left:false,right:false,accel:false,brake:false};
+var input={left:false,right:false,accel:false,brake:false,steer:0};
 var state={running:false,speed:0,x:0,distance:0,score:0,passengers:12,nextStop:600,stopIndex:0,boarding:false,boardTimer:0,shake:0,time:0,missed:false,gear:1};
-var settings={sound:true,camera:'wide',traffic:'normal',steering:'wheel',steerSide:'left',sensitivity:50,quality:'medium',sfx:100,music:60,departure:'day',cycle:'on',rain:'off',transmission:'auto'}, hasStarted=false,selectedBus=0,busColors=[0xe9a91f,0x3d6d9e,0x287d75];
+var settings={sound:true,camera:'wide',cameraMode:0,lights:true,traffic:'normal',steering:'wheel',steerSide:'left',sensitivity:50,quality:'medium',sfx:100,music:60,departure:'day',cycle:'on',rain:'off',transmission:'auto'}, hasStarted=false,selectedBus=0,busColors=[0xe9a91f,0x3d6d9e,0xe7e1d2];
 var stops=['Coconut Market','Hill Temple','Rice Field Gate','Seaside Terminal','Old Town Square','Tea Garden'];
-var traffic=[], roadTiles=[], sceneryTiles=[], last=performance.now(), spawnTimer=1.5, msgTimer=0, audio=null, musicOsc=null, musicGain=null, stopMarker=null;
+var traffic=[], roadTiles=[], sceneryTiles=[], last=performance.now(), spawnTimer=1.5, msgTimer=0, audio=null, musicOsc=null, musicGain=null, engineOsc=null,engineOsc2=null,engineGain=null,engineFilter=null,stopMarker=null,headLights=[],markerLights=[];
 if(!window.THREE){ overlay.innerHTML='<div class="menu-hint">3D engine unavailable. Reconnect and reopen the game.</div>'; return; }
 var renderer=new THREE.WebGLRenderer({canvas:canvas,antialias:true,powerPreference:'high-performance'});
 renderer.setPixelRatio(Math.min(2,devicePixelRatio||1)); renderer.setSize(innerWidth,innerHeight,false); renderer.shadowMap.enabled=true; renderer.shadowMap.type=THREE.PCFSoftShadowMap; renderer.outputColorSpace=THREE.SRGBColorSpace;
@@ -273,14 +305,40 @@ function makeTree(seed){var g=new THREE.Group();var trunk=cylinder(.16,2.1,mats.
 function makeHouse(seed){var g=new THREE.Group(), wall=box(3,2.2,3,mat(seed%2?0xe0b969:0xd37853));wall.position.y=1.1;g.add(wall);var roof=new THREE.Mesh(new THREE.ConeGeometry(2.35,1.3,4),mat(0x6d3f2c));roof.rotation.y=Math.PI/4;roof.position.y=2.85;roof.castShadow=true;g.add(roof);var win=box(.65,.7,.05,mats.glass);win.position.set(0,1.35,1.53);g.add(win);return g;}
 function makeRoadTile(i){var g=new THREE.Group();var r=box(10,.08,60,mats.road);r.position.y=.02;r.receiveShadow=true;g.add(r);var e1=box(.28,.06,60,mats.edge);e1.position.set(-5.12,.07,0);g.add(e1);var e2=e1.clone();e2.position.x=5.12;g.add(e2);for(var z=-26;z<30;z+=12){[-1.67,1.67].forEach(function(x){var line=box(.12,.035,5,mats.stripe);line.position.set(x,.095,z);g.add(line);});}g.position.z=-i*60;world.add(g);roadTiles.push(g);var sg=new THREE.Group();sg.position.z=-i*60;for(var j=0;j<7;j++){var side=j%2?1:-1;var obj=((i+j)%3===0)?makeHouse(i+j):makeTree(i+j);obj.position.set(side*(8+((i*7+j*3)%9)),0,-25+j*8);obj.rotation.y=((i+j)%5)*.35;sg.add(obj);}world.add(sg);sceneryTiles.push(sg);}
 for(var i=0;i<8;i++)makeRoadTile(i);
-function makeBus(){var g=new THREE.Group();var body=box(3.05,2.45,5.8,mats.yellow);body.position.y=1.65;g.add(body);var roof=box(3,0.32,5.5,mats.white);roof.position.y=3.04;g.add(roof);var back=box(2.55,1.0,.06,mats.dark);back.position.set(0,2.1,2.93);g.add(back);var sign=box(1.9,.38,.08,mats.black);sign.position.set(0,2.87,2.95);g.add(sign);var bumper=box(2.85,.25,.22,mats.black);bumper.position.set(0,.63,3.02);g.add(bumper);[-1,1].forEach(function(side){[-1.85,1.85].forEach(function(z){var wheel=new THREE.Mesh(new THREE.CylinderGeometry(.46,.46,.28,18),mats.black);wheel.rotation.z=Math.PI/2;wheel.position.set(side*1.5,.63,z);wheel.castShadow=true;wheel.userData.wheel=true;g.add(wheel);});var light=box(.38,.26,.09,mats.red);light.position.set(side*.95,1.12,2.96);light.userData.brakeLight=true;g.add(light);});for(var wz=-1.7;wz<=1.1;wz+=1.4){[-1,1].forEach(function(side){var w=box(.05,.85,1.05,mats.glass);w.position.set(side*1.54,2.12,wz);g.add(w);});}g.position.set(0,.02,0);world.add(g);return g;}
+function makeBus(){
+ var g=new THREE.Group();
+ var lower=box(3.08,1.35,6.45,mats.yellow);lower.position.y=1.15;g.add(lower);
+ var upper=box(3.02,1.7,6.18,mats.yellow);upper.position.set(0,2.42,-.04);g.add(upper);
+ var roof=box(2.92,.2,5.95,mats.white);roof.position.set(0,3.38,-.05);g.add(roof);
+ var rearGlass=box(2.46,1.02,.07,mats.dark);rearGlass.position.set(0,2.45,3.19);g.add(rearGlass);
+ var frontGlass=box(2.5,1.08,.07,mats.glass);frontGlass.position.set(0,2.43,-3.17);frontGlass.rotation.x=-.08;g.add(frontGlass);
+ var rearSign=box(1.82,.32,.09,mats.black);rearSign.position.set(0,3.08,3.21);g.add(rearSign);
+ var bumper=box(2.88,.22,.2,mats.black);bumper.position.set(0,.55,3.27);g.add(bumper);
+ var frontBumper=bumper.clone();frontBumper.position.z=-3.27;g.add(frontBumper);
+ var grille=box(1.45,.42,.08,mat(0x454d4e,.35));grille.position.set(0,.91,-3.24);g.add(grille);
+ for(var wz=-1.85;wz<=1.35;wz+=1.08){[-1,1].forEach(function(side){var w=box(.055,.92,.82,mats.glass);w.position.set(side*1.54,2.48,wz);g.add(w);});}
+ [-1,1].forEach(function(side){
+   [-2.05,2.04].forEach(function(z){var wheel=new THREE.Mesh(new THREE.CylinderGeometry(.48,.48,.3,20),mats.black);wheel.rotation.z=Math.PI/2;wheel.position.set(side*1.51,.57,z);wheel.castShadow=true;wheel.userData.wheel=true;g.add(wheel);var hub=new THREE.Mesh(new THREE.CylinderGeometry(.19,.19,.32,16),mat(0xb9c2c2,.28));hub.rotation.z=Math.PI/2;hub.position.copy(wheel.position);g.add(hub);});
+   var brakeMat=mat(0xb51f18,.36);brakeMat.emissive=new THREE.Color(0x280000);var tail=box(.34,.42,.09,brakeMat);tail.position.set(side*.98,1.22,3.23);tail.userData.brakeLight=true;g.add(tail);
+   var headMat=mat(0xf5f1d6,.2);headMat.emissive=new THREE.Color(0xffdd99);headMat.emissiveIntensity=2;var lamp=box(.44,.3,.1,headMat);lamp.position.set(side*.92,1.22,-3.23);lamp.userData.headLamp=true;g.add(lamp);
+   var mirrorArm=box(.48,.06,.06,mats.black);mirrorArm.position.set(side*1.72,2.75,-2.73);g.add(mirrorArm);var mirror=box(.13,.38,.25,mats.black);mirror.position.set(side*1.93,2.7,-2.73);g.add(mirror);
+   [-2.35,-.9,.55,2.15].forEach(function(z){var markerMat=mat(0xff9d1c,.35);markerMat.emissive=new THREE.Color(0xff6c00);markerMat.emissiveIntensity=1.4;var marker=box(.05,.12,.19,markerMat);marker.position.set(side*1.57,1.12,z);marker.userData.markerLamp=true;g.add(marker);markerLights.push(marker);});
+ });
+ var acBase=box(1.65,.25,2.55,mat(0xe6e8e4,.48));acBase.position.set(0,3.56,-.15);acBase.userData.acUnit=true;g.add(acBase);
+ [-.63,.63].forEach(function(x){var fan=new THREE.Mesh(new THREE.CylinderGeometry(.38,.38,.08,18),mats.dark);fan.position.set(x,3.72,-.15);fan.userData.acUnit=true;g.add(fan);});
+ var spoiler=box(2.78,.16,.5,mats.yellow);spoiler.position.set(0,3.5,2.78);spoiler.userData.spoiler=true;g.add(spoiler);
+ var stripeMat=mat(0x173a52,.4);[-1,1].forEach(function(side){var stripe=box(.06,.18,5.65,stripeMat);stripe.position.set(side*1.55,1.56,-.06);g.add(stripe);});
+ [-1,1].forEach(function(side){var spot=new THREE.SpotLight(0xffe6b0,0,48,Math.PI/7,.58,1.2);spot.position.set(side*.9,1.25,-3.4);spot.target.position.set(side*.55,.4,-28);g.add(spot);g.add(spot.target);headLights.push(spot);});
+ g.position.set(0,.02,0);world.add(g);return g;
+}
 var bus=makeBus();
 var garage=new THREE.Group(),gm=mat(0x5b6465),wallMat=mat(0xb9c1bd);world.add(garage);
 var floor=box(34,.18,32,gm);floor.position.set(0,-.02,-5);garage.add(floor);var backWall=box(34,10,.25,wallMat);backWall.position.set(0,5,-18);garage.add(backWall);[-13,-6.5,0,6.5,13].forEach(function(x){var beam=box(.25,10,.35,mat(0x166681));beam.position.set(x,5,-17.75);garage.add(beam);});var stripe=box(18,.04,.25,mats.yellow);stripe.position.set(0,.11,5);garage.add(stripe);
 function setWorldMode(driving){garage.visible=!driving;ground.visible=driving;sunBall.visible=driving;roadTiles.forEach(function(x){x.visible=driving;});sceneryTiles.forEach(function(x){x.visible=driving;});if(stopMarker)stopMarker.visible=driving;scene.background.set(driving?0x79bfd1:0x768182);scene.fog.color.set(driving?0x9fcdbf:0x768182);bus.rotation.y=driving?0:.25;}
-function applyBus(){mats.yellow.color.setHex(busColors[selectedBus]);var scales=[[1,1,1],[1.08,1.08,1.18],[.88,.92,.78]][selectedBus];bus.scale.set(scales[0],scales[1],scales[2]);document.querySelectorAll('.bus-card').forEach(function(card){card.classList.toggle('selected',Number(card.dataset.bus)===selectedBus);});}
-function openMenu(){state.running=false;input.left=input.right=input.accel=input.brake=false;setWorldMode(false);document.body.classList.add('menu-open');overlay.hidden=false;}
-function startJourney(){ensureAudio();document.body.classList.remove('menu-open');if(!hasStarted)reset();else{state.running=true;setWorldMode(true);overlay.hidden=true;showMessage('Journey resumed',1.2);}}
+function applyBus(){mats.yellow.color.setHex(busColors[selectedBus]);var scales=[[1,1,1],[1.06,1.12,1.15],[.97,1.04,.93]][selectedBus];bus.scale.set(scales[0],scales[1],scales[2]);bus.children.forEach(function(o){if(o.userData.spoiler)o.visible=selectedBus!==2;if(o.userData.acUnit)o.visible=true;});document.querySelectorAll('.bus-card').forEach(function(card){card.classList.toggle('selected',Number(card.dataset.bus)===selectedBus);});}
+function applyLights(){var on=settings.lights;headLights.forEach(function(light){light.intensity=on?6:0;});markerLights.forEach(function(light){light.material.emissiveIntensity=on?1.5:0;});bus.children.forEach(function(o){if(o.userData.headLamp)o.material.emissiveIntensity=on?2.2:0;});document.getElementById('lightButton').classList.toggle('on',on);}
+function openMenu(){state.running=false;input.left=input.right=input.accel=input.brake=false;input.steer=0;setWheelVisual(0);setWorldMode(false);document.body.classList.add('menu-open');overlay.hidden=false;}
+function startJourney(){ensureAudio();document.body.classList.remove('menu-open');if(!hasStarted)reset();else{state.running=true;setWorldMode(true);applyLights();overlay.hidden=true;showMessage('Journey resumed',1.2);}}
 document.querySelectorAll('[data-start]').forEach(function(button){button.addEventListener('click',startJourney);});
 menuButton.addEventListener('click',openMenu);
 document.getElementById('settingsGear').addEventListener('click',function(){settingsModal.hidden=false;});document.getElementById('backButton').addEventListener('click',function(){if(hasStarted)startJourney();});
@@ -295,7 +353,7 @@ document.querySelectorAll('.bus-card').forEach(function(card){card.addEventListe
 document.querySelectorAll('.paint').forEach(function(button){button.addEventListener('click',function(){document.querySelectorAll('.paint').forEach(function(other){other.setAttribute('aria-pressed','false');});button.setAttribute('aria-pressed','true');busColors[selectedBus]=parseInt(button.dataset.color,16);applyBus();});});
 garagePlay.addEventListener('click',function(){garageModal.hidden=true;startJourney();});
 document.querySelectorAll('.map').forEach(function(map){map.addEventListener('click',function(){document.querySelectorAll('.map').forEach(function(m){m.classList.toggle('selected',m===map);m.querySelector('span').textContent=m===map?'Selected':'Available';});});});
-function applySettings(){document.querySelector('.controls').style.flexDirection=settings.steerSide==='right'?'row-reverse':'row';document.querySelector('.controls').classList.toggle('wheel-mode',settings.steering==='wheel');renderer.setPixelRatio(Math.min(settings.quality==='high'?2:(settings.quality==='low'?1:1.5),devicePixelRatio||1));renderer.shadowMap.enabled=settings.quality!=='low';if(typeof rain!=='undefined')rain.visible=settings.rain==='on';document.getElementById('gearControls').hidden=settings.transmission!=='manual';applySky();}
+function applySettings(){document.querySelector('.controls').style.flexDirection=settings.steerSide==='right'?'row-reverse':'row';document.querySelector('.controls').classList.toggle('wheel-mode',settings.steering==='wheel');if(settings.steering!=='wheel')setWheelVisual(0);renderer.setPixelRatio(Math.min(settings.quality==='high'?2:(settings.quality==='low'?1:1.5),devicePixelRatio||1));renderer.shadowMap.enabled=settings.quality!=='low';if(typeof rain!=='undefined')rain.visible=settings.rain==='on';document.getElementById('gearControls').hidden=settings.transmission!=='manual';applySky();applyLights();}
 function shift(delta){state.gear=Math.max(1,Math.min(5,state.gear+delta));document.getElementById('gearValue').textContent=state.gear;showMessage('Gear '+state.gear,.7);}
 document.getElementById('gearDown').addEventListener('click',function(){shift(-1);});document.getElementById('gearUp').addEventListener('click',function(){shift(1);});
 function applySky(){var mode=settings.departure;if(mode==='random')mode=Math.random()<.5?'day':'night';var night=mode==='night';scene.background.set(night?0x12243c:(state.running?0x79bfd1:0x768182));scene.fog.color.set(night?0x1d3852:(state.running?0x9fcdbf:0x768182));sun.intensity=night?.45:2.4;hemi.intensity=night?.7:2;}
@@ -304,26 +362,38 @@ var colors=[0xe65d43,0x2e7588,0xead7a3,0x556b84,0xe0a52d,0xf0ede2];
 function spawnTraffic(){var lanes=[-3.2,0,3.2],type=Math.random()<.23?'truck':'car',g=makeCar(type,colors[(Math.random()*colors.length)|0]);var c={mesh:g,x:lanes[(Math.random()*3)|0],z:-145-Math.random()*70,speed:22+Math.random()*30};g.position.set(c.x,0,c.z);world.add(g);traffic.push(c);}
 function makeStopMarker(){var g=new THREE.Group();var pole=cylinder(.08,3.8,mats.yellow);pole.position.y=1.9;g.add(pole);var board=box(1.4,.85,.13,mats.yellow);board.position.set(0,3.65,0);g.add(board);var shelter=box(3,.15,1.6,mats.red);shelter.position.set(-1.2,2.6,-.4);g.add(shelter);var post=box(.12,2.6,.12,mats.white);post.position.set(-2.45,1.3,-.4);g.add(post);var post2=post.clone();post2.position.x=.05;g.add(post2);g.position.set(-7,0,-108);world.add(g);return g;}
 stopMarker=makeStopMarker();
-var rainGeo=new THREE.BufferGeometry(),rainPos=[];for(var rp=0;rp<330;rp++){rainPos.push((Math.random()-.5)*34,Math.random()*20,-Math.random()*90+8);}rainGeo.setAttribute('position',new THREE.Float32BufferAttribute(rainPos,3));var rain=new THREE.Points(rainGeo,new THREE.PointsMaterial({color:0xbfe9ff,size:.09,transparent:true,opacity:.72}));rain.visible=false;scene.add(rain);setWorldMode(false);applyBus();
+var rainGeo=new THREE.BufferGeometry(),rainPos=[];for(var rp=0;rp<330;rp++){rainPos.push((Math.random()-.5)*34,Math.random()*20,-Math.random()*90+8);}rainGeo.setAttribute('position',new THREE.Float32BufferAttribute(rainPos,3));var rain=new THREE.Points(rainGeo,new THREE.PointsMaterial({color:0xbfe9ff,size:.09,transparent:true,opacity:.72}));rain.visible=false;scene.add(rain);setWorldMode(false);applyBus();applyLights();
 function bind(id,key){var el=document.getElementById(id);function on(e){e.preventDefault();input[key]=true;el.classList.add('on');ensureAudio();}function off(e){if(e)e.preventDefault();input[key]=false;el.classList.remove('on');}el.addEventListener('pointerdown',on);el.addEventListener('pointerup',off);el.addEventListener('pointercancel',off);el.addEventListener('pointerleave',off);}
 bind('left','left');bind('right','right');bind('accel','accel');bind('brake','brake');
+var steeringWheel=document.getElementById('steeringWheel'),wheelActive=false;
+function setWheelVisual(value){input.steer=Math.max(-1,Math.min(1,value));steeringWheel.style.transform='rotate('+(input.steer*125)+'deg)';steeringWheel.setAttribute('aria-valuenow',String(Math.round(input.steer*100)));}
+function steerFromPointer(e){var rect=steeringWheel.getBoundingClientRect(),center=rect.left+rect.width/2;setWheelVisual((e.clientX-center)/(rect.width*.42));}
+steeringWheel.addEventListener('pointerdown',function(e){e.preventDefault();wheelActive=true;steeringWheel.setPointerCapture(e.pointerId);steerFromPointer(e);ensureAudio();});
+steeringWheel.addEventListener('pointermove',function(e){if(wheelActive)steerFromPointer(e);});
+function releaseWheel(e){if(!wheelActive)return;wheelActive=false;if(e&&steeringWheel.hasPointerCapture(e.pointerId))steeringWheel.releasePointerCapture(e.pointerId);setWheelVisual(0);}
+steeringWheel.addEventListener('pointerup',releaseWheel);steeringWheel.addEventListener('pointercancel',releaseWheel);
+steeringWheel.addEventListener('keydown',function(e){if(e.key==='ArrowLeft'||e.key==='ArrowRight'){setWheelVisual(input.steer+(e.key==='ArrowLeft'?-.18:.18));e.preventDefault();}});
+steeringWheel.addEventListener('keyup',function(e){if(e.key==='ArrowLeft'||e.key==='ArrowRight')setWheelVisual(0);});
 var keyMap={ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right',ArrowUp:'accel',w:'accel',W:'accel',ArrowDown:'brake',s:'brake',S:'brake'};
 addEventListener('keydown',function(e){if(e.key==='Escape'){menuButton.click();e.preventDefault();return;}if(keyMap[e.key]&&state.running){input[keyMap[e.key]]=true;e.preventDefault();}if((e.key==='h'||e.key==='H')&&!e.repeat&&state.running)horn();if(settings.transmission==='manual'&&!e.repeat&&(e.key==='q'||e.key==='Q'))shift(-1);if(settings.transmission==='manual'&&!e.repeat&&(e.key==='e'||e.key==='E'))shift(1);});addEventListener('keyup',function(e){if(keyMap[e.key]){input[keyMap[e.key]]=false;e.preventDefault();}});
-function ensureAudio(){if(!audio){var AC=window.AudioContext||window.webkitAudioContext;if(AC){audio=new AC();musicGain=audio.createGain();musicGain.gain.value=settings.music/6000;musicGain.connect(audio.destination);musicOsc=audio.createOscillator();musicOsc.type='triangle';musicOsc.frequency.value=82;musicOsc.connect(musicGain);musicOsc.start();}}if(audio&&audio.state==='suspended')audio.resume();}
-function horn(){ensureAudio();if(!audio||settings.sfx<=0)return;var now=audio.currentTime,o=audio.createOscillator(),o2=audio.createOscillator(),g=audio.createGain(),vol=.14*(settings.sfx/100);o.type='square';o2.type='sawtooth';o.frequency.value=185;o2.frequency.value=232;g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(Math.max(.0002,vol),now+.02);g.gain.setValueAtTime(Math.max(.0002,vol),now+.28);g.gain.exponentialRampToValueAtTime(.0001,now+.42);o.connect(g);o2.connect(g);g.connect(audio.destination);o.start(now);o2.start(now);o.stop(now+.44);o2.stop(now+.44);showMessage('BEEP BEEP! Traffic is moving aside.',1.1);traffic.forEach(function(c){if(c.z>-70)c.x+=c.x>0?1:-1;});}
-document.getElementById('horn').addEventListener('pointerdown',function(e){e.preventDefault();horn();});
+function ensureAudio(){if(!audio){var AC=window.AudioContext||window.webkitAudioContext;if(AC){audio=new AC();musicGain=audio.createGain();musicGain.gain.value=settings.music/7000;musicGain.connect(audio.destination);musicOsc=audio.createOscillator();musicOsc.type='triangle';musicOsc.frequency.value=82;musicOsc.connect(musicGain);musicOsc.start();engineGain=audio.createGain();engineGain.gain.value=.0001;engineFilter=audio.createBiquadFilter();engineFilter.type='lowpass';engineFilter.frequency.value=420;engineOsc=audio.createOscillator();engineOsc2=audio.createOscillator();engineOsc.type='sawtooth';engineOsc2.type='square';engineOsc.connect(engineFilter);engineOsc2.connect(engineFilter);engineFilter.connect(engineGain);engineGain.connect(audio.destination);engineOsc.start();engineOsc2.start();}}if(audio&&audio.state==='suspended')audio.resume();}
+function updateEngineSound(){if(!audio||!engineGain)return;var active=state.running&&settings.sfx>0,target=active?(.018+state.speed/5200)*(settings.sfx/100):.0001,rpm=48+state.speed*2.45+(input.accel?18:0);engineGain.gain.setTargetAtTime(Math.max(.0001,target),audio.currentTime,.08);engineOsc.frequency.setTargetAtTime(rpm,audio.currentTime,.06);engineOsc2.frequency.setTargetAtTime(rpm*.5,audio.currentTime,.08);engineFilter.frequency.setTargetAtTime(260+state.speed*8,audio.currentTime,.08);}
+function horn(type){ensureAudio();if(!audio||settings.sfx<=0)return;type=type||1;var now=audio.currentTime,g=audio.createGain(),vol=.15*(settings.sfx/100),notes=type===1?[196,247]:type===2?[146,184]:[110,139,165],wave=type===1?'square':type===2?'sawtooth':'triangle',duration=type===3?.72:type===2?.56:.4;notes.forEach(function(freq,i){var o=audio.createOscillator();o.type=wave;o.frequency.setValueAtTime(freq,now);if(type===3)o.frequency.linearRampToValueAtTime(freq*.96,now+duration);o.connect(g);o.start(now+i*.012);o.stop(now+duration);});g.gain.setValueAtTime(.0001,now);g.gain.exponentialRampToValueAtTime(Math.max(.0002,vol),now+.025);g.gain.setValueAtTime(Math.max(.0002,vol),now+duration-.12);g.gain.exponentialRampToValueAtTime(.0001,now+duration);g.connect(audio.destination);showMessage(type===1?'City horn':type===2?'Coach horn':'Luxury air horn',.9);traffic.forEach(function(c){if(c.z>-70)c.x+=c.x>0?1:-1;});}
+document.querySelectorAll('[data-horn]').forEach(function(button){button.addEventListener('pointerdown',function(e){e.preventDefault();horn(Number(button.dataset.horn));});});
+var cameraNames=['CHASE','DRIVER','ROOF','SIDE'];document.getElementById('cameraButton').addEventListener('click',function(){settings.cameraMode=(settings.cameraMode+1)%cameraNames.length;document.getElementById('cameraLabel').textContent='CAM '+(settings.cameraMode+1);showMessage(cameraNames[settings.cameraMode]+' CAMERA',.8);});
+document.getElementById('lightButton').addEventListener('click',function(){settings.lights=!settings.lights;applyLights();showMessage(settings.lights?'Bus lights on':'Bus lights off',.8);});
 function showMessage(text,seconds){message.textContent=text;message.classList.add('show');msgTimer=seconds||2;}
 function updateHud(){speedEl.textContent=Math.round(state.speed);scoreEl.textContent=state.score;passengerEl.textContent=state.passengers;stopNameEl.textContent=stops[state.stopIndex%stops.length];stopDistEl.textContent=Math.max(0,Math.round(state.nextStop-state.distance));}
-function reset(){state={running:true,speed:0,x:0,distance:0,score:0,passengers:12,nextStop:600,stopIndex:0,boarding:false,boardTimer:0,shake:0,time:0,missed:false,gear:1};traffic.forEach(function(c){world.remove(c.mesh);});traffic=[];spawnTimer=1.2;hasStarted=true;overlay.hidden=true;setWorldMode(true);applySky();bus.position.x=0;updateHud();showMessage('Route started — drive safe!',1.8);}
+function reset(){state={running:true,speed:0,x:0,distance:0,score:0,passengers:12,nextStop:600,stopIndex:0,boarding:false,boardTimer:0,shake:0,time:0,missed:false,gear:1};traffic.forEach(function(c){world.remove(c.mesh);});traffic=[];spawnTimer=1.2;hasStarted=true;overlay.hidden=true;setWorldMode(true);applySky();applyLights();bus.position.x=0;updateHud();showMessage('Luxury AC coach ready — drive safe!',1.8);}
 function collision(){for(var i=0;i<traffic.length;i++){var c=traffic[i];if(c.z>-4&&c.z<4&&Math.abs(c.x-state.x)<2.1){world.remove(c.mesh);traffic.splice(i,1);state.speed*=.4;state.score=Math.max(0,state.score-80);state.shake=.55;showMessage('Careful! Collision · −80 points',1.8);break;}}}
-function update(dt){if(msgTimer>0){msgTimer-=dt;if(msgTimer<=0)message.classList.remove('show');}state.time+=dt;if(!state.running){bus.rotation.z=Math.sin(state.time*.7)*.008;return;}
+function update(dt){if(msgTimer>0){msgTimer-=dt;if(msgTimer<=0)message.classList.remove('show');}state.time+=dt;if(!state.running){bus.rotation.z=Math.sin(state.time*.7)*.008;updateEngineSound();return;}
  if(state.boarding){state.speed=Math.max(0,state.speed-60*dt);state.boardTimer-=dt;if(state.boardTimer<=0){state.boarding=false;var got=3+Math.floor(Math.random()*7);state.passengers+=got;state.score+=150;state.stopIndex++;state.nextStop+=650+Math.floor(Math.random()*280);showMessage(got+' passengers aboard · +150 points',2);}}
- else{if(input.accel)state.speed+=30*dt;else state.speed-=4.2*dt;if(input.brake)state.speed-=68*dt;var speedLimit=settings.transmission==='manual'?Math.min(96,state.gear*21):96;state.speed=Math.max(0,Math.min(speedLimit,state.speed));var steer=(input.left?-1:0)+(input.right?1:0);state.x+=steer*dt*(3.1+state.speed*.035)*(settings.sensitivity/50);state.x=Math.max(-5.7,Math.min(5.7,state.x));if(Math.abs(state.x)>4.6&&state.speed>32)state.speed-=18*dt;state.distance+=state.speed*dt/3.6;var remain=state.nextStop-state.distance;if(remain<20&&remain>-22&&state.speed<4){state.boarding=true;state.boardTimer=2.1;showMessage('Doors open · boarding…',2.1);}if(remain<-25){state.score=Math.max(0,state.score-50);state.stopIndex++;state.nextStop+=650+Math.floor(Math.random()*280);showMessage('Stop missed · −50 points',1.8);}spawnTimer-=dt;if(spawnTimer<=0&&state.speed>7){spawnTraffic();var trafficRate=settings.traffic==='low'?1.65:(settings.traffic==='busy'?.65:1);spawnTimer=(1.4+Math.random()*1.8)*trafficRate;}collision();}
+ else{if(input.accel)state.speed+=52*dt;else state.speed-=5.2*dt;if(input.brake)state.speed-=82*dt;var speedLimit=settings.transmission==='manual'?Math.min(150,state.gear*30):150;state.speed=Math.max(0,Math.min(speedLimit,state.speed));var buttonSteer=(input.left?-1:0)+(input.right?1:0),steer=settings.steering==='wheel'?(Math.abs(input.steer)>.02?input.steer:buttonSteer):buttonSteer;state.x+=steer*dt*(3.4+state.speed*.041)*(settings.sensitivity/50);state.x=Math.max(-5.7,Math.min(5.7,state.x));if(Math.abs(state.x)>4.6&&state.speed>42)state.speed-=20*dt;state.distance+=state.speed*dt/3.6;var remain=state.nextStop-state.distance;if(remain<20&&remain>-22&&state.speed<4){state.boarding=true;state.boardTimer=2.1;showMessage('Doors open · boarding…',2.1);}if(remain<-25){state.score=Math.max(0,state.score-50);state.stopIndex++;state.nextStop+=650+Math.floor(Math.random()*280);showMessage('Stop missed · −50 points',1.8);}spawnTimer-=dt;if(spawnTimer<=0&&state.speed>7){spawnTraffic();var trafficRate=settings.traffic==='low'?1.65:(settings.traffic==='busy'?.65:1);spawnTimer=(1.4+Math.random()*1.8)*trafficRate;}collision();}
  var move=state.speed*dt*.19;roadTiles.forEach(function(t){t.position.z+=move;if(t.position.z>45)t.position.z-=roadTiles.length*60;});sceneryTiles.forEach(function(t){t.position.z+=move;if(t.position.z>45)t.position.z-=sceneryTiles.length*60;});
  traffic.forEach(function(c){c.z+=(state.speed-c.speed)*dt*.19;c.mesh.position.z=c.z;c.mesh.position.x+=(c.x-c.mesh.position.x)*dt*3;c.mesh.children.forEach(function(o){if(o.userData.wheel)o.rotation.x-=state.speed*dt*.06;});});traffic=traffic.filter(function(c){if(c.z>26||c.z<-245){world.remove(c.mesh);return false;}return true;});
  var rem=state.nextStop-state.distance;stopMarker.visible=rem<570;stopMarker.position.z=-Math.max(-5,rem*.19);stopMarker.position.x=-7;
- bus.position.x+=(state.x-bus.position.x)*Math.min(1,dt*8);bus.rotation.z+=(steer*-.075-bus.rotation.z)*dt*7;bus.rotation.y+=(steer*-.055-bus.rotation.y)*dt*5;bus.position.y=.03+Math.sin(state.time*8)*Math.min(.025,state.speed/3000);bus.children.forEach(function(o){if(o.userData.wheel)o.rotation.x-=state.speed*dt*.07;if(o.userData.brakeLight)o.material.emissive=new THREE.Color(input.brake?0xaa1100:0x000000);});if(rain.visible){var rp=rain.geometry.attributes.position.array;for(var ri=1;ri<rp.length;ri+=3){rp[ri]-=dt*22;if(rp[ri]<0)rp[ri]=20;}rain.geometry.attributes.position.needsUpdate=true;}if(settings.cycle==='on'){var daylight=.5+.5*Math.sin(state.time*.025+1.2);sun.intensity=.35+daylight*2.05;hemi.intensity=.55+daylight*1.45;scene.background.setHSL(.55,.38,.12+daylight*.48);scene.fog.color.copy(scene.background);}state.shake=Math.max(0,state.shake-dt);updateHud();}
-function render(){var close=settings.camera==='close',targetX=bus.position.x*.3,targetY=close?4.35:5.15,targetZ=close?8.1:10.6;camera.position.x+=(targetX-camera.position.x)*.055;camera.position.y+=(targetY+Math.sin(state.time*5)*Math.min(.035,state.speed/2000)-camera.position.y)*.1;camera.position.z+=(targetZ-camera.position.z)*.1;camera.rotation.z+=(bus.rotation.z*.16-camera.rotation.z)*.08;if(state.shake){camera.position.x+=(Math.random()-.5)*state.shake*.3;camera.position.y+=(Math.random()-.5)*state.shake*.2;}camera.lookAt(bus.position.x*.58,1.2,-10);renderer.render(scene,camera);}
+ bus.position.x+=(state.x-bus.position.x)*Math.min(1,dt*8);bus.rotation.z+=(steer*-.075-bus.rotation.z)*dt*7;bus.rotation.y+=(steer*-.055-bus.rotation.y)*dt*5;bus.position.y=.03+Math.sin(state.time*8)*Math.min(.025,state.speed/3000);bus.children.forEach(function(o){if(o.userData.wheel)o.rotation.x-=state.speed*dt*.07;if(o.userData.brakeLight)o.material.emissive=new THREE.Color(input.brake?0xaa1100:0x000000);});if(rain.visible){var rp=rain.geometry.attributes.position.array;for(var ri=1;ri<rp.length;ri+=3){rp[ri]-=dt*22;if(rp[ri]<0)rp[ri]=20;}rain.geometry.attributes.position.needsUpdate=true;}if(settings.cycle==='on'){var daylight=.5+.5*Math.sin(state.time*.025+1.2);sun.intensity=.35+daylight*2.05;hemi.intensity=.55+daylight*1.45;scene.background.setHSL(.55,.38,.12+daylight*.48);scene.fog.color.copy(scene.background);}state.shake=Math.max(0,state.shake-dt);updateEngineSound();updateHud();}
+function render(){var mode=settings.cameraMode,close=settings.camera==='close',targetX,targetY,targetZ,lookX,lookY,lookZ;if(mode===1){targetX=bus.position.x;targetY=2.72;targetZ=-3.52;lookX=bus.position.x;lookY=1.8;lookZ=-32;}else if(mode===2){targetX=bus.position.x*.8;targetY=4.65;targetZ=.35;lookX=bus.position.x;lookY=.8;lookZ=-24;}else if(mode===3){targetX=bus.position.x+8.2;targetY=3.55;targetZ=3.1;lookX=bus.position.x;lookY=1.55;lookZ=-2;}else{targetX=bus.position.x*.3;targetY=close?4.35:5.15;targetZ=close?8.1:10.6;lookX=bus.position.x*.58;lookY=1.2;lookZ=-10;}var follow=mode===1?.18:.09;camera.position.x+=(targetX-camera.position.x)*follow;camera.position.y+=(targetY+Math.sin(state.time*5)*Math.min(.035,state.speed/2000)-camera.position.y)*follow;camera.position.z+=(targetZ-camera.position.z)*follow;camera.rotation.z+=(bus.rotation.z*(mode===1?.5:.16)-camera.rotation.z)*.08;if(state.shake){camera.position.x+=(Math.random()-.5)*state.shake*.3;camera.position.y+=(Math.random()-.5)*state.shake*.2;}camera.lookAt(lookX,lookY,lookZ);renderer.render(scene,camera);}
 function frame(now){var dt=Math.min(.035,(now-last)/1000);last=now;update(dt);render();requestAnimationFrame(frame);}requestAnimationFrame(frame);
 addEventListener('resize',function(){camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setPixelRatio(Math.min(2,devicePixelRatio||1));renderer.setSize(innerWidth,innerHeight,false);});
 })();
