@@ -387,7 +387,7 @@
   <section class="modal" id="garageModal" hidden aria-label="Garage">
     <div class="settings-window garage-window"><header><h2>Garage</h2><button class="close-modal" type="button" data-close="garageModal" aria-label="Close garage">×</button></header>
       <div class="garage-body"><p>Choose a coach, design its livery and grow your company.</p><div class="career-strip"><div class="career-chip"><small>Company</small><b id="garageLevel">Level 1</b></div><div class="career-chip"><small>Balance</small><b id="garageBalance">Rs. 25,000</b></div><div class="career-chip"><small>Bus condition</small><b id="garageHealth">100%</b></div></div><div class="bus-list">
-        <button class="bus-card selected" data-bus="0" data-price="0"><b>Classic Liner</b><small>Owned · Luxury intercity coach</small></button><button class="bus-card" data-bus="1" data-price="65000"><b>Town Star</b><small>Rs. 65,000 · 3D model city bus</small></button><button class="bus-card" data-bus="2" data-price="85000"><b>City Rider</b><small>Rs. 85,000 · 3D model city bus</small></button><button class="bus-card" data-bus="3" data-price="95000"><b>Nagoya City</b><small>Rs. 95,000 · 3D model city bus</small></button><button class="bus-card" data-bus="4" data-price="110000"><b>Toei Tokyo</b><small>Rs. 110,000 · 3D model city bus</small></button>
+        <button class="bus-card selected" data-bus="0" data-price="0"><b>Town Star</b><small>Owned · 3D model city bus</small></button><button class="bus-card" data-bus="1" data-price="85000"><b>City Rider</b><small>Rs. 85,000 · 3D model city bus</small></button><button class="bus-card" data-bus="2" data-price="95000"><b>Nagoya City</b><small>Rs. 95,000 · 3D model city bus</small></button><button class="bus-card" data-bus="3" data-price="110000"><b>Toei Tokyo</b><small>Rs. 110,000 · 3D model city bus</small></button>
       </div><div class="model-credit">3D model credit: Sketchfab authors (CC-BY) · &ldquo;City Bus RoAZ-5236&rdquo; by Yo.Ri</div><div id="glbSpinner" hidden>Loading 3D bus&hellip;</div><div class="paint-row" id="paintRow" aria-label="Bus paint colors"><button class="paint" style="--paint:#e9a91f" data-color="e9a91f" aria-label="Golden yellow" aria-pressed="true"></button><button class="paint" style="--paint:#d84d3c" data-color="d84d3c" aria-label="Island red" aria-pressed="false"></button><button class="paint" style="--paint:#287d75" data-color="287d75" aria-label="Lagoon green" aria-pressed="false"></button><button class="paint" style="--paint:#3d6d9e" data-color="3d6d9e" aria-label="Ocean blue" aria-pressed="false"></button><button class="paint" style="--paint:#e7e1d2" data-color="e7e1d2" aria-label="Pearl white" aria-pressed="false"></button></div><h3 class="livery-title" id="liveryTitle">Livery workshop</h3><div class="livery-row" id="liveryRow"><button class="livery selected" data-livery="classic">Classic</button><button class="livery" data-livery="swoop">Swoop</button><button class="livery" data-livery="racing">Racing</button><button class="livery" data-livery="island">Island sticker</button></div><div class="garage-actions"><button class="repair" id="repairButton" type="button">REPAIR · Rs. 1,500</button><button id="saveButton" type="button">DOWNLOAD SAVE</button><button id="loadButton" type="button">LOAD SAVE</button><input id="loadFile" type="file" accept="application/json" hidden></div><button class="garage-play" id="garagePlay" type="button">DRIVE SELECTED BUS</button></div>
     </div>
   </section>
@@ -431,7 +431,7 @@ var overlay=document.getElementById('overlay'), settingsModal=document.getElemen
 var menuButton=document.getElementById('menuButton'), garagePlay=document.getElementById('garagePlay');
 var input={left:false,right:false,accel:false,brake:false,steer:0};
 var state={running:false,mode:'free',speed:0,x:0,distance:0,score:0,money:25000,companyLevel:1,passengers:0,nextStop:600,route:null,tripSeq:0,tripDone:false,stopIndex:0,boarding:false,boardTimer:0,doorsOpen:false,doorAmount:0,fuel:100,health:100,nextFuel:900,shake:0,time:0,missed:false,gear:1,radio:false,wipers:false};
-var settings={sound:true,camera:'wide',cameraMode:0,lights:true,traffic:'normal',steering:'wheel',steerSide:'left',sensitivity:50,quality:'medium',sfx:100,music:60,departure:'day',cycle:'on',rain:'off',transmission:'auto'}, hasStarted=false,selectedBus=0,busColors=[0xe9a91f,0x3d6d9e,0xe7e1d2,0xe9a91f,0xe9a91f],busOwned=[true,false,false,false,false],livery='classic';
+var settings={sound:true,camera:'wide',cameraMode:0,lights:true,traffic:'normal',steering:'wheel',steerSide:'left',sensitivity:50,quality:'medium',sfx:100,music:60,departure:'day',cycle:'on',rain:'off',transmission:'auto'}, hasStarted=false,selectedBus=0,busColors=[0xe9a91f,0x3d6d9e,0xe7e1d2,0xe9a91f,0xe9a91f],busOwned=[true,false,false,false],livery='classic';
 var LOCATIONS=['Jaffna','Vavuniya','Anuradhapura','Trincomalee','Puttalam','Batticaloa','Kurunegala','Chilaw','Dambulla','Polonnaruwa','Negombo','Nittambuwa','Kegalle','Mawanella','Kandy','Colombo','Makumbura','Panadura','Kalutara','Avissawella','Hatton','Nuwara Eliya','Ratnapura','Balangoda','Badulla','Ella','Bentota','Ambalangoda','Galle','Matara','Hambantota','Kataragama'];
 var CITY_IDX={};LOCATIONS.forEach(function(n,i){CITY_IDX[n]=i;});
 var ROUTES=[
@@ -510,8 +510,7 @@ function makeBus(){
 var bus=makeBus();
 /* ---- V6: Sketchfab GLB garage buses (buses/ sidecar folder) ---- */
 var BUS_DEFS=[
- {name:'Classic Liner',desc:'Luxury intercity coach',price:0,glb:null},
- {name:'Town Star',desc:'3D model city bus',price:65000,glb:'bus1.json'},
+ {name:'Town Star',desc:'3D model city bus',price:0,glb:'bus1.json'},
  {name:'City Rider',desc:'3D model city bus',price:85000,glb:'bus2.json'},
  {name:'Nagoya City',desc:'3D model city bus',price:95000,glb:'bus3.json'},
  {name:'Toei Tokyo',desc:'3D model city bus',price:110000,glb:'bus4.json'}
@@ -592,7 +591,7 @@ function mountGlbBus(idx){
   if(token!==glbLoadToken)return;
   if(spinner)spinner.hidden=true;
   showMessage('3D bus files not found \u2014 put bus1.json..bus4.json next to index.html',2.6);
-  selectedBus=0;applyBus();
+  mountClassicBus();
  }
  if(glbJsonCache[idx]){done(glbJsonCache[idx].data,glbJsonCache[idx].tex);return;}
  if(spinner)spinner.hidden=false;
@@ -616,18 +615,11 @@ function setWorldMode(driving){garage.visible=!driving;groundTiles.forEach(funct
 function applyLivery(){var schemes={classic:[0xf2eee1,.28,0],swoop:[0x1b4d72,.5,.22],racing:[0xe7352a,.2,-.28],island:[0x22a85a,.62,.34]},s=schemes[livery]||schemes.classic;liveryMeshes.forEach(function(mesh,i){mesh.material.color.setHex(s[0]);mesh.scale.y=s[1];mesh.rotation.x=(i?1:-1)*s[2];});stickerMeshes.forEach(function(mesh){mesh.visible=livery==='island';});document.querySelectorAll('.livery').forEach(function(b){b.classList.toggle('selected',b.dataset.livery===livery);});}
 function refreshCareerUi(){var money='Rs. '+Math.round(state.money).toLocaleString();document.getElementById('balance').textContent=money;document.getElementById('garageBalance').textContent=money;document.getElementById('garageLevel').textContent='Level '+state.companyLevel;document.getElementById('companyName').textContent='ISLAND TRANSIT · LV '+state.companyLevel;document.getElementById('garageHealth').textContent=Math.round(state.health)+'%';document.getElementById('menuHealth').textContent=Math.round(state.health)+'% · '+(state.health>70?'Good':state.health>35?'Damaged':'Critical');document.querySelectorAll('.bus-card').forEach(function(card){var i=Number(card.dataset.bus),small=card.querySelector('small');card.classList.toggle('selected',i===selectedBus);if(busOwned[i])small.textContent='Owned · '+BUS_DEFS[i].desc;});}
 function applyBus(){
- if(selectedBus===0){
-  mats.yellow.color.setHex(busColors[0]);
-  mountClassicBus();
-  applyLivery();
- }else{
-  mountGlbBus(selectedBus);
- }
- var isGlb=selectedBus!==0;
+ mountGlbBus(selectedBus);
  var pr=document.getElementById('paintRow'),lr=document.getElementById('liveryRow'),lt=document.getElementById('liveryTitle');
- if(pr)pr.style.display=isGlb?'none':'';
- if(lr)lr.style.display=isGlb?'none':'';
- if(lt)lt.style.display=isGlb?'none':'';
+ if(pr)pr.style.display='none';
+ if(lr)lr.style.display='none';
+ if(lt)lt.style.display='none';
  refreshCareerUi();
 }
 function applyLights(){var on=settings.lights;headLights.forEach(function(light){light.intensity=on?6:0;});markerLights.forEach(function(light){light.material.emissiveIntensity=on?1.5:0;});bus.children.forEach(function(o){if(o.userData.headLamp)o.material.emissiveIntensity=on?2.2:0;});document.getElementById('lightButton').classList.toggle('on',on);}
@@ -671,7 +663,7 @@ document.getElementById('repairButton').addEventListener('click',function(){var 
 function careerData(){return{version:1,money:Math.round(state.money),companyLevel:state.companyLevel,score:state.score,health:Math.round(state.health),fuel:Math.round(state.fuel),selectedBus:selectedBus,busOwned:busOwned,busColors:busColors,livery:livery};}
 document.getElementById('saveButton').addEventListener('click',function(){var blob=new Blob([JSON.stringify(careerData(),null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='island-transit-career.json';a.click();setTimeout(function(){URL.revokeObjectURL(a.href);},500);showMessage('Career save downloaded',1.4);});
 document.getElementById('loadButton').addEventListener('click',function(){document.getElementById('loadFile').click();});
-document.getElementById('loadFile').addEventListener('change',function(){var file=this.files&&this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(){try{var d=JSON.parse(reader.result);if(d.version!==1)throw Error('version');state.money=Math.max(0,Number(d.money)||0);state.companyLevel=Math.max(1,Number(d.companyLevel)||1);state.score=Math.max(0,Number(d.score)||0);state.health=Math.max(0,Math.min(100,Number(d.health)||100));state.fuel=Math.max(0,Math.min(100,Number(d.fuel)||100));busOwned=Array.isArray(d.busOwned)?d.busOwned.slice(0,5):busOwned;selectedBus=busOwned[d.selectedBus]?Number(d.selectedBus):0;if(Array.isArray(d.busColors))busColors=d.busColors.slice(0,5);livery=d.livery||'classic';applyBus();updateHud();showMessage('Career progress loaded',1.5);}catch(err){showMessage('That save file could not be loaded',1.8);}};reader.readAsText(file);this.value='';});
+document.getElementById('loadFile').addEventListener('change',function(){var file=this.files&&this.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(){try{var d=JSON.parse(reader.result);if(d.version!==1)throw Error('version');state.money=Math.max(0,Number(d.money)||0);state.companyLevel=Math.max(1,Number(d.companyLevel)||1);state.score=Math.max(0,Number(d.score)||0);state.health=Math.max(0,Math.min(100,Number(d.health)||100));state.fuel=Math.max(0,Math.min(100,Number(d.fuel)||100));busOwned=Array.isArray(d.busOwned)?d.busOwned.slice(0,4):busOwned;selectedBus=busOwned[d.selectedBus]?Number(d.selectedBus):0;if(Array.isArray(d.busColors))busColors=d.busColors.slice(0,5);livery=d.livery||'classic';applyBus();updateHud();showMessage('Career progress loaded',1.5);}catch(err){showMessage('That save file could not be loaded',1.8);}};reader.readAsText(file);this.value='';});
 garagePlay.addEventListener('click',function(){garageModal.hidden=true;trip.mode=state.mode||'free';openTripModal();});
 document.querySelectorAll('.map').forEach(function(map){map.addEventListener('click',function(){document.querySelectorAll('.map').forEach(function(m){m.classList.toggle('selected',m===map);m.querySelector('span').textContent=m===map?'Selected':'Available';});});});
 function applySettings(){document.querySelector('.controls').style.flexDirection=settings.steerSide==='right'?'row-reverse':'row';document.querySelector('.controls').classList.toggle('wheel-mode',settings.steering==='wheel');if(settings.steering!=='wheel')setWheelVisual(0);renderer.setPixelRatio(Math.min(settings.quality==='high'?2:(settings.quality==='low'?1:1.5),devicePixelRatio||1));renderer.shadowMap.enabled=settings.quality!=='low';if(typeof rain!=='undefined')rain.visible=settings.rain==='on';document.getElementById('gearControls').hidden=settings.transmission!=='manual';applySky();applyLights();}
