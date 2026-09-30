@@ -511,14 +511,17 @@ var bus=makeBus();
 /* ---- V6: Sketchfab GLB garage buses (buses/ sidecar folder) ---- */
 var BUS_DEFS=[
  {name:'Classic Liner',desc:'Luxury intercity coach',price:0,glb:null},
- {name:'Town Star',desc:'3D model city bus',price:65000,glb:'buses/bus1.json'},
- {name:'City Rider',desc:'3D model city bus',price:85000,glb:'buses/bus2.json'},
- {name:'Nagoya City',desc:'3D model city bus',price:95000,glb:'buses/bus3.json'},
- {name:'Toei Tokyo',desc:'3D model city bus',price:110000,glb:'buses/bus4.json'}
+ {name:'Town Star',desc:'3D model city bus',price:65000,glb:'bus1.json'},
+ {name:'City Rider',desc:'3D model city bus',price:85000,glb:'bus2.json'},
+ {name:'Nagoya City',desc:'3D model city bus',price:95000,glb:'bus3.json'},
+ {name:'Toei Tokyo',desc:'3D model city bus',price:110000,glb:'bus4.json'}
 ];
 var busLen=6.5,busHalfL=3.27,busH=3.5;
 var classicBus=bus,classicHeadlights=headLights.slice();
 var glbJsonCache={},glbLoadToken=0;
+var GLB_BASES=['buses/',''];
+function fetchGlbJson(name){return new Promise(function(resolve,reject){var i=0;function attempt(){fetch(GLB_BASES[i]+name).then(function(r){if(!r.ok)throw Error('http '+r.status);return r.json();}).then(function(j){resolve({json:j,base:GLB_BASES[i]});}).catch(function(e){i++;if(i<GLB_BASES.length)attempt();else reject(e);});}attempt();});}
+function loadGlbTexture(loader,base,fn,ok,err){loader.load(base+fn,ok,undefined,function(){if(base)loadGlbTexture(loader,'',fn,ok,err);else err();});}
 function useClassicHeadlights(){headLights.length=0;for(var i=0;i<classicHeadlights.length;i++)headLights.push(classicHeadlights[i]);}
 function disposeBusGroup(gr){gr.traverse(function(o){if(o.geometry&&o.geometry.dispose)o.geometry.dispose();});}
 function mountClassicBus(){
@@ -588,18 +591,18 @@ function mountGlbBus(idx){
  function fail(){
   if(token!==glbLoadToken)return;
   if(spinner)spinner.hidden=true;
-  showMessage('3D bus files not found \u2014 upload the buses folder next to index.html',2.6);
+  showMessage('3D bus files not found \u2014 put bus1.json..bus4.json next to index.html',2.6);
   selectedBus=0;applyBus();
  }
  if(glbJsonCache[idx]){done(glbJsonCache[idx].data,glbJsonCache[idx].tex);return;}
  if(spinner)spinner.hidden=false;
- fetch(def.glb).then(function(r){if(!r.ok)throw Error('http '+r.status);return r.json();}).then(function(data){
+ fetchGlbJson(def.glb).then(function(res){var data=res.json,texBase=res.base;
   if(token!==glbLoadToken)return;
   var files=data.textures||[],texObjs=new Array(files.length),pending=files.length;
   if(!pending){glbJsonCache[idx]={data:data,tex:texObjs};done(data,texObjs);return;}
   var loader=new THREE.TextureLoader();
   files.forEach(function(fn,i){
-   loader.load('buses/'+fn,function(t){
+   loadGlbTexture(loader,texBase,fn,function(t){
     t.colorSpace=THREE.SRGBColorSpace;
     texObjs[i]=t;
     if(--pending===0){glbJsonCache[idx]={data:data,tex:texObjs};done(data,texObjs);}
